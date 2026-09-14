@@ -10,9 +10,9 @@ import { formatCurrency, formatDate } from '../utils/emailReminder'
 import { IllustrationAllClear, IllustrationDueAlert, IllustrationEmpty } from '../components/Illustrations'
 
 const STATUS_STYLES = {
-  confirmed_payment: 'bg-teal-50 text-teal-600',
-  pending: 'bg-amber-50 text-amber-600',
-  due: 'bg-rose-50 text-rose-500',
+  confirmed_payment: 'bg-teal-50 text-teal-600 dark:bg-teal-400/10 dark:text-teal-400',
+  pending: 'bg-amber-50 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400',
+  due: 'bg-rose-50 text-rose-500 dark:bg-rose-400/10 dark:text-rose-400',
 }
 
 export default function StudentDashboard() {
@@ -58,7 +58,7 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper dark:bg-dark-bg">
       <TopBar
         title={`Hi, ${student?.name?.split(' ')[0] || 'there'}`}
         subtitle={`Student ID: ${student?.studentId || '—'}`}
@@ -80,10 +80,10 @@ export default function StudentDashboard() {
           <div className="flex items-center gap-4 text-center sm:text-left">
             {outstanding > 0 ? <IllustrationDueAlert className="h-16 w-16 shrink-0" /> : <IllustrationAllClear className="h-16 w-16 shrink-0" />}
             <div>
-              <p className="font-display text-lg font-semibold text-ink">
+              <p className="font-display text-lg font-semibold text-ink dark:text-dark-ink">
                 {outstanding > 0 ? `You have ${formatCurrency(outstanding)} due` : "You're all caught up"}
               </p>
-              <p className="text-sm text-ink-faint">
+              <p className="text-sm text-ink-faint dark:text-dark-faint">
                 {outstanding > 0
                   ? 'Make a payment and claim it below — your admin will confirm it shortly.'
                   : 'No outstanding balance for your current session. Nice work.'}
@@ -93,7 +93,7 @@ export default function StudentDashboard() {
           {outstanding > 0 && (
             <button
               onClick={() => { setForm((f) => ({ ...f, amount: String(outstanding) })); setModalOpen(true) }}
-              className="w-full shrink-0 rounded-chip bg-ink px-4 py-2.5 text-sm font-semibold text-paper hover:opacity-90 sm:w-auto"
+              className="w-full shrink-0 rounded-chip bg-ink px-4 py-2.5 text-sm font-semibold text-paper hover:opacity-90 dark:bg-dark-ink dark:text-dark-bg sm:w-auto"
             >
               Pay {formatCurrency(outstanding)}
             </button>
@@ -109,21 +109,21 @@ export default function StudentDashboard() {
 
         {/* Ledger */}
         <div className="bento-card mt-6 overflow-hidden">
-          <div className="flex items-center justify-between border-b border-line px-5 py-4 sm:px-6">
-            <h3 className="font-display text-base font-semibold text-ink">Payment & due history</h3>
-            <CreditCard size={18} className="text-ink-faint" />
+          <div className="flex items-center justify-between border-b border-line dark:border-dark-line px-5 py-4 sm:px-6">
+            <h3 className="font-display text-base font-semibold text-ink dark:text-dark-ink">Payment & due history</h3>
+            <CreditCard size={18} className="text-ink-faint dark:text-dark-faint" />
           </div>
 
           {txs.length === 0 ? (
             <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
               <IllustrationEmpty />
-              <p className="text-sm text-ink-faint">Nothing here yet — your dues and payments will appear as soon as they're recorded.</p>
+              <p className="text-sm text-ink-faint dark:text-dark-faint">Nothing here yet — your dues and payments will appear as soon as they're recorded.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[560px] text-left text-sm">
                 <thead>
-                  <tr className="text-xs text-ink-faint">
+                  <tr className="text-xs text-ink-faint dark:text-dark-faint">
                     <th className="px-5 py-3 font-medium sm:px-6">Date</th>
                     <th className="px-5 py-3 font-medium sm:px-6">Session</th>
                     <th className="px-5 py-3 font-medium sm:px-6">Type</th>
@@ -133,11 +133,11 @@ export default function StudentDashboard() {
                 </thead>
                 <tbody>
                   {txs.map((t) => (
-                    <tr key={t.id} className="border-t border-line/70">
-                      <td className="px-5 py-3.5 text-ink-soft sm:px-6">{formatDate(t.createdAt)}</td>
-                      <td className="px-5 py-3.5 text-ink-soft sm:px-6">{t.session || '—'}</td>
-                      <td className="px-5 py-3.5 capitalize text-ink-soft sm:px-6">{t.type === 'due' ? 'Invoice / due' : 'Payment'}</td>
-                      <td className="px-5 py-3.5 text-right font-medium text-ink sm:px-6">{formatCurrency(t.amount)}</td>
+                    <tr key={t.id} className="border-t border-line/70 dark:border-dark-line/70">
+                      <td className="px-5 py-3.5 text-ink-soft dark:text-dark-soft sm:px-6">{formatDate(t.createdAt)}</td>
+                      <td className="px-5 py-3.5 text-ink-soft dark:text-dark-soft sm:px-6">{t.session || '—'}</td>
+                      <td className="px-5 py-3.5 capitalize text-ink-soft dark:text-dark-soft sm:px-6">{t.type === 'due' ? 'Invoice / due' : 'Payment'}</td>
+                      <td className="px-5 py-3.5 text-right font-medium text-ink dark:text-dark-ink sm:px-6">{formatCurrency(t.amount)}</td>
                       <td className="px-5 py-3.5 text-right sm:px-6">
                         <StatusChip type={t.type} status={t.status} />
                       </td>
@@ -152,31 +152,31 @@ export default function StudentDashboard() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Claim a payment">
         <form onSubmit={handleClaimPayment} className="space-y-3">
-          <p className="text-sm text-ink-faint">
+          <p className="text-sm text-ink-faint dark:text-dark-faint">
             Already paid via bank transfer, cash or mobile banking? Log it here — your admin gets notified instantly and confirms it.
           </p>
           <div>
-            <label className="mb-1 block text-xs font-medium text-ink-soft">Amount paid</label>
+            <label className="mb-1 block text-xs font-medium text-ink-soft dark:text-dark-soft">Amount paid</label>
             <input
               type="number" min="1" required value={form.amount}
               onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-              className="w-full rounded-chip border border-line px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-chip border border-line dark:border-dark-line bg-paper dark:bg-dark-bg text-ink dark:text-dark-ink px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none"
               placeholder="e.g. 500"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-ink-soft">Session</label>
+            <label className="mb-1 block text-xs font-medium text-ink-soft dark:text-dark-soft">Session</label>
             <input
               value={form.session} onChange={(e) => setForm((f) => ({ ...f, session: e.target.value }))}
-              className="w-full rounded-chip border border-line px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-chip border border-line dark:border-dark-line bg-paper dark:bg-dark-bg text-ink dark:text-dark-ink px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none"
               placeholder="e.g. Spring 2026"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-ink-soft">Note (optional)</label>
+            <label className="mb-1 block text-xs font-medium text-ink-soft dark:text-dark-soft">Note (optional)</label>
             <input
               value={form.note} onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
-              className="w-full rounded-chip border border-line px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-chip border border-line dark:border-dark-line bg-paper dark:bg-dark-bg text-ink dark:text-dark-ink px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none"
               placeholder="e.g. Paid via bKash, TrxID 8XJ22K"
             />
           </div>

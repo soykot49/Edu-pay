@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
@@ -12,6 +13,14 @@ export default {
         },
         line: '#E7E5DD',
         panel: '#FFFFFF',
+        dark: {
+          bg: '#10131A',
+          panel: '#181C25',
+          line: '#2A2F3B',
+          ink: '#F3F1E9',
+          soft: '#C7CBD6',
+          faint: '#8B90A2',
+        },
         teal: {
           50: '#EAF6F2',
           100: '#CFEBE1',

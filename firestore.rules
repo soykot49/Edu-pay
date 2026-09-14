@@ -35,5 +35,16 @@ service cloud.firestore {
     match /costs/{id} {
       allow read, write: if isAdmin();
     }
+
+    // Submitted from the login screen, before the person is authenticated —
+    // anyone can create one (that's the point: they're locked out), but only
+    // admins can read the list or mark requests resolved.
+    match /passwordResetRequests/{id} {
+      allow create: if request.resource.data.email is string
+                      && request.resource.data.email.size() > 3
+                      && request.resource.data.status == 'pending';
+      allow read, update: if isAdmin();
+      allow delete: if false;
+    }
   }
 }

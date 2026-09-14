@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -74,7 +75,14 @@ export function AuthProvider({ children }) {
     return signOut(auth)
   }
 
-  const value = { user, profile, loading, signupStudent, signupAdmin, login, logout }
+  // Sends Firebase's official password-reset email directly. Used for admin
+  // self-service, and by admins on a student's behalf once they've reviewed
+  // that student's reset request (see utils/firestore.js).
+  async function resetPassword(email) {
+    return sendPasswordResetEmail(auth, email)
+  }
+
+  const value = { user, profile, loading, signupStudent, signupAdmin, login, logout, resetPassword }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

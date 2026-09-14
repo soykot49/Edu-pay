@@ -14,7 +14,7 @@ export default function LiveBell({ notifications, onOpenTx }) {
     <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative flex items-center gap-2 rounded-chip border border-line bg-panel px-3 py-2 text-sm font-medium text-ink-soft hover:border-teal-400/50 hover:text-teal-600"
+        className="relative flex items-center gap-2 rounded-chip border border-line bg-panel px-3 py-2 text-sm font-medium text-ink-soft hover:border-teal-400/50 hover:text-teal-600 dark:border-dark-line dark:bg-dark-panel dark:text-dark-soft dark:hover:text-teal-400"
         aria-label="Notifications"
       >
         <Bell size={16} />
@@ -27,10 +27,10 @@ export default function LiveBell({ notifications, onOpenTx }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-[22rem] max-w-[90vw] overflow-hidden rounded-bento border border-line bg-panel shadow-bentoHover">
-          <div className="flex items-center justify-between border-b border-line px-4 py-3">
-            <p className="font-display text-sm font-semibold text-ink">Live activity</p>
-            <span className="flex items-center gap-1.5 text-xs text-teal-600">
+        <div className="absolute right-0 z-50 mt-2 w-[22rem] max-w-[90vw] overflow-hidden rounded-bento border border-line bg-panel shadow-bentoHover dark:border-dark-line dark:bg-dark-panel">
+          <div className="flex items-center justify-between border-b border-line px-4 py-3 dark:border-dark-line">
+            <p className="font-display text-sm font-semibold text-ink dark:text-dark-ink">Live activity</p>
+            <span className="flex items-center gap-1.5 text-xs text-teal-600 dark:text-teal-400">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-pulseDot rounded-full bg-teal-500" />
               </span>
@@ -41,14 +41,14 @@ export default function LiveBell({ notifications, onOpenTx }) {
             {notifications.length === 0 ? (
               <div className="flex flex-col items-center gap-2 px-6 py-8 text-center">
                 <IllustrationEmpty className="h-20 w-20" />
-                <p className="text-sm text-ink-faint">No activity yet. New payment claims from students will show up here instantly.</p>
+                <p className="text-sm text-ink-faint dark:text-dark-faint">No activity yet. New payment claims from students will show up here instantly.</p>
               </div>
             ) : (
               notifications.slice(0, 12).map((n) => (
                 <button
                   key={n.id}
                   onClick={() => onOpenTx(n)}
-                  className="flex w-full items-start gap-3 border-b border-line/70 px-4 py-3 text-left last:border-0 hover:bg-teal-50/60"
+                  className="flex w-full items-start gap-3 border-b border-line/70 px-4 py-3 text-left last:border-0 hover:bg-teal-50/60 dark:border-dark-line/70 dark:hover:bg-teal-400/10"
                 >
                   {n.read ? (
                     <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-teal-500" />
@@ -56,13 +56,13 @@ export default function LiveBell({ notifications, onOpenTx }) {
                     <Circle size={16} className="mt-0.5 shrink-0 fill-amber-400 text-amber-400" />
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-ink">
-                      {n.studentName} <span className="font-normal text-ink-faint">· {n.studentId}</span>
+                    <p className="truncate text-sm font-medium text-ink dark:text-dark-ink">
+                      {n.studentName} <span className="font-normal text-ink-faint dark:text-dark-faint">· {n.studentId}</span>
                     </p>
-                    <p className="text-xs text-ink-faint">
+                    <p className="text-xs text-ink-faint dark:text-dark-faint">
                       Claims payment of {formatCurrency(n.amount)} for {n.session || 'this session'}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-ink-faint/80">{formatDate(n.createdAt)}</p>
+                    <p className="mt-0.5 text-[11px] text-ink-faint/80 dark:text-dark-faint/80">{formatDate(n.createdAt)}</p>
                   </div>
                 </button>
               ))

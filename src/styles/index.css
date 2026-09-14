@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  @apply bg-paper text-ink font-body antialiased;
+  @apply bg-paper text-ink font-body antialiased transition-colors duration-300 dark:bg-dark-bg dark:text-dark-ink;
 }
 
 h1, h2, h3, h4 {
@@ -16,6 +16,9 @@ h1, h2, h3, h4 {
 
 ::selection {
   @apply bg-teal-100 text-ink;
+}
+.dark ::selection {
+  @apply bg-teal-600/40 text-dark-ink;
 }
 
 *:focus-visible {
@@ -28,6 +31,8 @@ h1, h2, h3, h4 {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #DEDCD2; border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: #CFCCBF; }
+.dark ::-webkit-scrollbar-thumb { background: #313747; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #3D4457; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -39,7 +44,7 @@ h1, h2, h3, h4 {
 }
 
 .bento-card {
-  @apply bg-panel border border-line rounded-bento shadow-bento transition-shadow duration-300;
+  @apply bg-panel border border-line rounded-bento shadow-bento transition-shadow duration-300 dark:bg-dark-panel dark:border-dark-line;
 }
 .bento-card:hover {
   @apply shadow-bentoHover;

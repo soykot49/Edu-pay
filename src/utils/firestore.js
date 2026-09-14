@@ -88,3 +88,23 @@ export async function addCost({ title, category, amount, date }) {
   const year = new Date(date).getFullYear()
   await addDoc(collection(db, 'costs'), { title, category, amount, date, year, createdAt: serverTimestamp() })
 }
+
+// ---------- Password reset requests (student → admin assisted flow) ----------
+// A student who forgets their password can't reset it themselves without
+// being logged in, and self-service reset emails are easy to miss or lose
+// trust in. Instead they submit a request here; an admin reviews it and
+// sends them Firebase's official reset email with one click.
+export async function submitPasswordResetRequest({ name, email, studentId }) {
+  await addDoc(collection(db, 'passwordResetRequests'), {
+    name, email, studentId: studentId || '', status: 'pending', createdAt: serverTimestamp(),
+  })
+}
+
+export function listenPasswordResetRequests(cb) {
+  const q = query(collection(db, 'passwordResetRequests'), orderBy('createdAt', 'desc'))
+  return onSnapshot(q, (snap) => cb(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
+}
+
+export async function resolvePasswordResetRequest(id) {
+  await updateDoc(doc(db, 'passwordResetRequests', id), { status: 'resolved', resolvedAt: serverTimestamp() })
+}
