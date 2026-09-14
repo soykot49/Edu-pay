@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { GraduationCap, KeyRound, Lock, Mail, ShieldCheck, User } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useAuth } from '../context/AuthContext'
-import { firebaseConfigured } from '../firebase'
 import ThreeBackground from '../components/ThreeBackground'
 import { IllustrationWelcome } from '../components/Illustrations'
 
@@ -111,11 +110,6 @@ export default function Login() {
           <p className="mt-1 text-sm text-ink-faint">
             {role === 'student' ? 'Track your dues, payments and session history.' : 'Manage payments, income and site settings.'}
           </p>
-          {!firebaseConfigured && (
-            <div className="mt-4 rounded-chip border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-800">
-              Firebase is not configured yet. Add the values from <code>.env.example</code> to enable accounts and data storage.
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-3">
             {mode === 'signup' && (

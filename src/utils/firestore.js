@@ -6,11 +6,9 @@ import {
   onSnapshot,
   orderBy,
   query,
-  runTransaction,
   serverTimestamp,
   updateDoc,
   where,
-  writeBatch,
 } from 'firebase/firestore'
 import { db } from '../firebase'
 
@@ -38,63 +36,36 @@ export function listenTransactions(cb, studentUid = null) {
 }
 
 export async function addDue({ studentUid, studentId, studentName, amount, session, note }) {
-  const batch = writeBatch(db)
-  const txRef = doc(collection(db, 'transactions'))
-  batch.set(txRef, {
+  await addDoc(collection(db, 'transactions'), {
     studentUid, studentId, studentName, amount, session, note: note || '',
     type: 'due', status: 'confirmed', createdAt: serverTimestamp(),
   })
-  batch.update(doc(db, 'students', studentUid), {
-    totalDue: incrementAmount(amount),
-    currentSession: session,
-  })
-  await batch.commit()
+  await updateDoc(doc(db, 'students', studentUid), { totalDue: increment(amount) })
 }
 
 export async function recordPaymentByAdmin({ studentUid, studentId, studentName, amount, session, note }) {
-  const batch = writeBatch(db)
-  const txRef = doc(collection(db, 'transactions'))
-  batch.set(txRef, {
+  await addDoc(collection(db, 'transactions'), {
     studentUid, studentId, studentName, amount, session, note: note || '',
     type: 'payment', status: 'confirmed', createdAt: serverTimestamp(),
   })
-  batch.update(doc(db, 'students', studentUid), { totalPaid: incrementAmount(amount) })
-  await batch.commit()
+  await updateDoc(doc(db, 'students', studentUid), { totalPaid: increment(amount) })
 }
 
 export async function submitPaymentByStudent({ studentUid, studentId, studentName, amount, session, note }) {
-  const batch = writeBatch(db)
-  const txRef = doc(collection(db, 'transactions'))
-  batch.set(txRef, {
+  const txRef = await addDoc(collection(db, 'transactions'), {
     studentUid, studentId, studentName, amount, session, note: note || '',
     type: 'payment', status: 'pending', createdAt: serverTimestamp(),
   })
-  const notificationRef = doc(collection(db, 'notifications'))
-  batch.set(notificationRef, {
+  await addDoc(collection(db, 'notifications'), {
     txId: txRef.id, studentUid, studentId, studentName, amount, session,
     kind: 'payment_pending', read: false, createdAt: serverTimestamp(),
   })
-  await batch.commit()
   return txRef.id
 }
 
 export async function confirmPendingPayment({ txId, studentUid, amount }) {
-  await runTransaction(db, async (transaction) => {
-    const txRef = doc(db, 'transactions', txId)
-    const studentRef = doc(db, 'students', studentUid)
-    const txSnap = await transaction.get(txRef)
-    const studentSnap = await transaction.get(studentRef)
-
-    if (!txSnap.exists() || txSnap.data().status !== 'pending') {
-      throw new Error('This payment has already been confirmed or no longer exists.')
-    }
-    if (!studentSnap.exists()) {
-      throw new Error('The student record could not be found.')
-    }
-
-    transaction.update(txRef, { status: 'confirmed', confirmedAt: serverTimestamp() })
-    transaction.update(studentRef, { totalPaid: incrementAmount(amount) })
-  })
+  await updateDoc(doc(db, 'transactions', txId), { status: 'confirmed', confirmedAt: serverTimestamp() })
+  await updateDoc(doc(db, 'students', studentUid), { totalPaid: increment(amount) })
 }
 
 // ---------- Notifications ----------
@@ -116,8 +87,4 @@ export function listenCosts(cb) {
 export async function addCost({ title, category, amount, date }) {
   const year = new Date(date).getFullYear()
   await addDoc(collection(db, 'costs'), { title, category, amount, date, year, createdAt: serverTimestamp() })
-}
-
-function incrementAmount(amount) {
-  return increment(amount)
 }
