@@ -110,11 +110,17 @@ export default function Login() {
       </div>
 
       {/* Form panel */}
-      <div className="relative flex items-center justify-center px-5 py-10 sm:px-8">
-        <div className="absolute right-5 top-5 sm:right-8 sm:top-8">
+      <div className="relative flex items-center justify-center overflow-hidden px-5 py-10 sm:px-8">
+        {/* Mobile/tablet only: the same animated wireframe, tinted to blend
+            with the current theme instead of sitting on its own dark panel. */}
+        <div className="absolute inset-0 lg:hidden">
+          <ThreeBackground variant="ambient" />
+        </div>
+
+        <div className="absolute right-5 top-5 z-20 sm:right-8 sm:top-8">
           <ThemeToggle />
         </div>
-        <div className="w-full max-w-sm">
+        <div className="relative z-10 w-full max-w-sm">
           <div className="mb-8 flex items-center gap-2 lg:hidden">
             <span className="flex h-9 w-9 items-center justify-center rounded-chip bg-teal-50 text-teal-600 dark:bg-teal-400/10 dark:text-teal-400">
               <GraduationCap size={20} />
