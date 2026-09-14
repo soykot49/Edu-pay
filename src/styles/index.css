@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-body antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: '"Space Grotesk"', sans-serif;
+}
+
+::selection {
+  @apply bg-teal-100 text-ink;
+}
+
+*:focus-visible {
+  outline: 2px solid theme('colors.teal.500');
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #DEDCD2; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #CFCCBF; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.bento-card {
+  @apply bg-panel border border-line rounded-bento shadow-bento transition-shadow duration-300;
+}
+.bento-card:hover {
+  @apply shadow-bentoHover;
+}
